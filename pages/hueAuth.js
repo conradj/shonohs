@@ -44,7 +44,7 @@ export const getServerSideProps = withSession(async function({
   await req.session.save();
 
   if (state.connectionState === connectionStateTypes.CONNECTED) {
-    res.writeHead(302, { Location: "/connections" });
+    res.writeHead(302, { Location: "/" });
     res.end();
   }
 

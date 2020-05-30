@@ -2,17 +2,11 @@ import withSession from "../lib/session";
 import { sonosOauth, sonosAuthPage } from "../lib/sonos-connection";
 import ServiceConnect from "../components/ServiceConnect";
 
-const connectionStateTypes = {
-  NOT_CONNECTED: 1,
-  CONNECTED: 2
-};
-
 export const getServerSideProps = withSession(async function({
   req,
   res,
   query
 }) {
-  const state = { connectionState: connectionStateTypes.NOT_CONNECTED };
   const { code } = query;
 
   const sonosConnection = {
@@ -33,7 +27,7 @@ export const getServerSideProps = withSession(async function({
         const token = await sonosOauth.accessToken.create(result);
         req.session.set("sonos_token", result);
         await req.session.save();
-        res.writeHead(302, { Location: "/connections" });
+        res.writeHead(302, { Location: "/" });
         res.end();
       } catch (err) {
         console.log("errCreateSonosToken", err);

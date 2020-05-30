@@ -25,7 +25,7 @@ export const getServerSideProps = withSession(async function({
     spotifyApi.setAccessToken(data.body["access_token"]);
     spotifyApi.setRefreshToken(data.body["refresh_token"]);
     await req.session.save();
-    res.writeHead(302, { Location: "/connections" });
+    res.writeHead(302, { Location: "/" });
     res.end();
   } catch (err) {
     return {
