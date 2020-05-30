@@ -1,0 +1,32 @@
+@tailwind base;
+body {
+  @apply bg-white p-6;
+  /* p-12; */
+}
+h1 {
+  @apply text-2xl leading-6 mt-6 mb-6;
+}
+h2 {
+  @apply text-xl leading-5 mt-5 mb-5;
+}
+h3 {
+  @apply text-lg;
+}
+a {
+  @apply text-blue-600 underline;
+}
+p {
+  /* @apply space-y-3; */
+}
+@tailwind components;
+@tailwind utilities;
+
+.btn {
+  @apply font-bold bg-gray-900 text-white py-2 px-4 rounded;
+}
+/* .btn-blue {
+  @apply bg-gray-800 text-white;
+} */
+.btn:hover {
+  @apply bg-gray-800;
+}
