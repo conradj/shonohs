@@ -14,6 +14,9 @@ export const getServerSideProps = withSession(async function({
   const errorMessage = "";
   const spotifyApi = await SpotifyApi(req.session);
   const sonosApi = await SonosApi(req.session);
+  const hueCredentials = req.session.get("hue_credentials");
+  const hueGroup = req.session.get("hue_entertainment_group");
+
   const spotifyConnection = {
     connected: false,
     loginUrl: "",
@@ -42,9 +45,6 @@ export const getServerSideProps = withSession(async function({
   } else {
     spotifyConnection.loginUrl = spotifyAuthPage();
   }
-
-  const hueCredentials = req.session.get("hue_credentials");
-  const hueGroup = req.session.get("hue_entertainment_group");
 
   if (hueCredentials && hueGroup) {
     hueConnection.connected = true;
