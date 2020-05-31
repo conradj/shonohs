@@ -18,7 +18,7 @@ export const getServerSideProps = withSession(async function({
   if (code) {
     const options = {
       code,
-      redirect_uri: "http://localhost:3000/sonosAuthCallback",
+      redirect_uri: `${process.env.DOMAIN}/sonosAuthCallback`,
       grant_type: "authorization_code"
     };
     try {
