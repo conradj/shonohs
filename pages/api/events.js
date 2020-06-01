@@ -1,7 +1,7 @@
 import withSession from "../../lib/session";
 
 export default withSession(async (req, res) => {
-  res.sendStatus(200);
+  res.status(200);
   const headers = JSON.stringify(req.headers);
   //console.log(headers);
   const {
