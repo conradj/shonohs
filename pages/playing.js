@@ -1,8 +1,6 @@
 import withSession from "../lib/session";
-//import withSonos from "../middleware/sonos";
 import SonosApi from "../lib/sonosApi";
 import NowPlayingGroup from "../components/NowPlayingGroup";
-const simpleOauthModule = require("simple-oauth2");
 
 export const getServerSideProps = withSession(async function({
   req,
@@ -12,9 +10,9 @@ export const getServerSideProps = withSession(async function({
   let errorMessage = "";
   const sonosApi = new SonosApi();
   await sonosApi.connect(req.session.get("sonos_token"));
-  req.session.set("sonos_token", sonosApi.token);
 
   try {
+    req.session.set("sonos_token", sonosApi.token);
     await req.session.save();
   } catch (err) {
     console.error("sonos connect session save error", err);
