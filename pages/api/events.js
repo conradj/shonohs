@@ -12,7 +12,8 @@ export default withSession(async (req, res) => {
   console.log("event posted", sonosNameSpace);
   switch (sonosNameSpace && sonosNameSpace.toLowerCase()) {
     case "playbackmetadata":
-      const sendPlayBackToClientResponse = sendPlayBackToClient(req.body);
+      //const sendPlayBackToClientResponse = sendPlayBackToClient(req.body);
+      console.info(`supported sonos event ${sonosNameSpace}`, req.body);
       break;
     default:
       console.error(`unsupported sonos event ${sonosNameSpace}`);
