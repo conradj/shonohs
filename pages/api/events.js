@@ -1,5 +1,4 @@
-import withSession from "../../../lib/session";
-import SonosApi from "../../../lib/sonosApi";
+import withSession from "../../lib/session";
 
 export default withSession(async (req, res) => {
   res.sendStatus(200);
