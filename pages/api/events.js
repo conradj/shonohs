@@ -1,0 +1,25 @@
+import withSession from "../../../lib/session";
+import SonosApi from "../../../lib/sonosApi";
+
+export default withSession(async (req, res) => {
+  res.sendStatus(200);
+  const headers = JSON.stringify(req.headers);
+  //console.log(headers);
+  const {
+    "x-sonos-type": sonosEventType,
+    "x-sonos-namespace": sonosNameSpace
+  } = JSON.parse(JSON.stringify(req.headers));
+
+  console.log("event posted", sonosNameSpace);
+  switch (sonosNameSpace && sonosNameSpace.toLowerCase()) {
+    case "playbackmetadata":
+      const sendPlayBackToClientResponse = sendPlayBackToClient(req.body);
+      break;
+    default:
+      console.error(`unsupported sonos event ${sonosNameSpace}`);
+  }
+  //   res.status(200).json({ playbackMetadata });
+  res.end();
+
+  return;
+});

@@ -10,7 +10,7 @@ export default withSession(async (req, res) => {
   await sonosApi.connect(req.session.get("sonos_token"));
 
   const playbackMetadata = await sonosApi.getPlaybackMetadata(id);
-  console.log("playbackMetadata", playbackMetadata);
+  const test = await sonosApi.subscribeToPlayback(id);
 
   res.status(200).json({ playbackMetadata });
   res.end();
