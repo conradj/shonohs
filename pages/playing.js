@@ -19,22 +19,30 @@ export const getServerSideProps = withSession(async function({
   }
   const { groups, players } = await sonosApi.getGroups();
   return {
-    props: { errorMessage, groups }
+    props: { errorMessage, groups, players }
   };
 });
 
-const NowPlaying = ({ errorMessage, groups }) => (
-  <div>
-    <div className="connection-status">CONNECTION STATUS HEADER</div>
-    <div>{errorMessage}</div>
-    <div className="content">
-      {groups.map(group => (
-        <NowPlayingGroup key={group.id} groupId={group.id}>
-          {group.name}
-        </NowPlayingGroup>
-      ))}
+const NowPlaying = ({ errorMessage, groups, players }) => {
+  return (
+    <div>
+      <div className="connection-status">CONNECTION STATUS HEADER</div>
+      <div>{errorMessage}</div>
+      <div className="flex flex-wrap">
+        {groups.map(group => (
+          <NowPlayingGroup
+            key={group.id}
+            groupId={group.id}
+            speakers={players.filter(player =>
+              group.playerIds.includes(player.id)
+            )}
+          >
+            {group.name}
+          </NowPlayingGroup>
+        ))}
+      </div>
     </div>
-  </div>
-);
+  );
+};
 
 export default NowPlaying;

@@ -8,11 +8,20 @@ export default props => {
   if (!data) return <div>loading...</div>;
 
   const {
-    container: { name = "", imageUrl = "" }
+    container: { name = "", imageUrl }
   } = data.playbackMetadata;
   return (
-    <div>
-      <Card imageUrl={imageUrl} name={name}>
+    <div className="mr-6 mb-6">
+      <Card
+        imageUrl={imageUrl}
+        name={name}
+        tags={props.speakers.map(speaker => {
+          return {
+            id: speaker.id,
+            name: speaker.name
+          };
+        })}
+      >
         {props.children}
       </Card>
     </div>
