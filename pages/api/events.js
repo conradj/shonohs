@@ -18,10 +18,10 @@ export default withSession(async (req, res) => {
     case "playbackmetadata":
       //const sendPlayBackToClientResponse = sendPlayBackToClient(req.body);
       console.info(`supported sonos event ${sonosNameSpace}`, req.body);
-      socket.on("data", data => {
-        latestData = data;
-        mutate(`/api/groups/${sonosTargetValue}`, data, false);
-      });
+      //   socket.on("data", data => {
+      //     latestData = data;
+      //     mutate(`/api/groups/${sonosTargetValue}`, data, false);
+      //   });
       break;
     default:
       console.error(`unsupported sonos event ${sonosNameSpace}`);
