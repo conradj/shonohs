@@ -7,27 +7,25 @@ export const getServerSideProps = withSession(async function({
   res,
   query
 }) {
-  let errorMessage = "";
   const sonosApi = new SonosApi();
-  await sonosApi.connect(req.session.get("sonos_token"));
+  const sonosConnected = await sonosApi.connect(req.session.get("sonos_token"));
 
   try {
     req.session.set("sonos_token", sonosApi.token);
     await req.session.save();
   } catch (err) {
     console.error("sonos connect session save error", err);
+    return <div>sonos connect session save error</div>;
   }
   const { groups, players } = await sonosApi.getGroups();
   return {
-    props: { errorMessage, groups, players }
+    props: { groups, players }
   };
 });
 
 const NowPlaying = ({ errorMessage, groups, players }) => {
   return (
     <div className="container">
-      <div className="connection-status">CONNECTION STATUS HEADER</div>
-      <div>{errorMessage}</div>
       <div className="grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
         {groups.map(group => (
           <NowPlayingGroup
