@@ -1,5 +1,5 @@
-import withSession from "../../../lib/session";
-import SonosApi from "../../../lib/sonosApi";
+import withSession from "../../../../lib/session";
+import SonosApi from "../../../../lib/sonosApi";
 
 export default withSession(async (req, res) => {
   const {
@@ -10,7 +10,7 @@ export default withSession(async (req, res) => {
   await sonosApi.connect(req.session.get("sonos_token"));
 
   const playbackMetadata = await sonosApi.getPlaybackMetadata(id);
-  const test = await sonosApi.subscribeToPlayback(id);
+  //const test = await sonosApi.subscribeToPlayback(id);
 
   res.status(200).json({ playbackMetadata });
   res.end();
