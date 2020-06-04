@@ -8,7 +8,7 @@ export default props => (
 
     <div className="px-6 py-4">
       <div className="font-bold text-xl mb-2">{props.name}</div>
-      <p className="text-gray-700 text-base">{props.children}</p>
+      <div className="text-gray-700 text-base">{props.children}</div>
     </div>
     <div className="px-6 py-4 h-32 max-h-full">
       {props.tags.map(tag => (
