@@ -25,10 +25,10 @@ export const getServerSideProps = withSession(async function({
 
 const NowPlaying = ({ errorMessage, groups, players }) => {
   return (
-    <div>
+    <div className="container">
       <div className="connection-status">CONNECTION STATUS HEADER</div>
       <div>{errorMessage}</div>
-      <div className="flex flex-wrap">
+      <div className="grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
         {groups.map(group => (
           <NowPlayingGroup
             key={group.id}
