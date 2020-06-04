@@ -15,13 +15,16 @@ export default props => {
   if (!data) return <div>loading...</div>;
 
   const {
-    errorCode,
-    container: { name = "", imageUrl },
-    currentItem
-  } = data.playbackMetadata;
+    playbackMetadata,
+    playbackMetadata: { errorCode }
+  } = data;
 
   if (errorCode) return <div>Error...{errorCode}</div>;
-  console.log(currentItem);
+
+  const {
+    container: { name = "", imageUrl },
+    currentItem
+  } = playbackMetadata;
   return (
     <div className="mr-6 mb-6">
       <Card
@@ -35,10 +38,12 @@ export default props => {
         })}
       >
         {currentItem?.track && (
-          <p>
-            {currentItem?.track?.artist?.name} ·{" "}
-            {currentItem?.track?.album?.name}
-          </p>
+          <marquee>
+            <p>
+              {currentItem?.track?.artist?.name} ·{" "}
+              {currentItem?.track?.album?.name}
+            </p>
+          </marquee>
         )}
         <p>{name}</p>
         {currentItem?.track && (
