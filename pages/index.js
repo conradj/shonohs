@@ -1,5 +1,5 @@
 import Head from "next/head";
-
+import Link from "next/link";
 import withSession from "../lib/session";
 import { SpotifyApi, spotifyAuthPage } from "../lib/spotify-connection";
 import { SonosApi, sonosAuthPage } from "../lib/sonos-connection";
@@ -65,6 +65,11 @@ const Connections = ({
       <ServiceConnect connection={spotifyConnection}>Spotify</ServiceConnect>
       <ServiceConnect connection={hueConnection}>Hue</ServiceConnect>
       {errorMessage && <span>{errorMessage}</span>}
+      {sonosConnection.connected && (
+        <Link href="/playing">
+          <a>Now Playing</a>
+        </Link>
+      )}
     </div>
   );
 };
