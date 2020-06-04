@@ -8,7 +8,7 @@ export default props => {
     `/api/groups/metadata/${props.groupId}`,
     fetch,
     {
-      refreshInterval: 1000
+      refreshInterval: 1500
     }
   );
   if (error) return <div>failed to load</div>;
@@ -25,34 +25,29 @@ export default props => {
     container: { name = "", imageUrl },
     currentItem
   } = playbackMetadata;
+
+  const trackDetails =
+    currentItem && currentItem.track
+      ? `${currentItem.track?.artist?.name} · ${currentItem?.track?.album?.name}`
+      : "";
+
   return (
-    <div className="mr-6 mb-6">
-      <Card
-        imageUrl={currentItem?.track?.imageUrl || imageUrl}
-        name={currentItem?.track?.name || name}
-        tags={props.speakers.map(speaker => {
-          return {
-            id: speaker.id,
-            name: speaker.name
-          };
-        })}
-      >
-        {currentItem?.track && (
-          <marquee>
-            <p>
-              {currentItem?.track?.artist?.name} ·{" "}
-              {currentItem?.track?.album?.name}
-            </p>
-          </marquee>
-        )}
-        <p>{name}</p>
-        {currentItem?.track && (
-          <PlaybackStatus
-            groupId={props.groupId}
-            durationMillis={currentItem?.track.durationMillis}
-          />
-        )}
-      </Card>
-    </div>
+    <Card
+      imageUrl={currentItem?.track?.imageUrl || imageUrl}
+      name={currentItem?.track?.name || name}
+      tags={props.speakers.map(speaker => {
+        return {
+          id: speaker.id,
+          name: speaker.name
+        };
+      })}
+    >
+      {trackDetails !== "" && (
+        <marquee scrollamount={trackDetails.length > 45 ? 6 : 0}>
+          {trackDetails}
+        </marquee>
+      )}
+      <p>{name}</p>
+    </Card>
   );
 };
