@@ -2,17 +2,19 @@ import Head from "next/head";
 import Link from "next/link";
 import withSession from "../lib/session";
 import { SpotifyApi, spotifyAuthPage } from "../lib/spotify-connection";
-import { SonosApi, sonosAuthPage } from "../lib/sonos-connection";
 import ServiceConnect from "../components/ServiceConnect";
+import SonosApi from "../lib/sonosApi";
 
 export const getServerSideProps = withSession(async function({
   req,
   res,
   query
 }) {
-  const errorMessage = "";
   const spotifyApi = await SpotifyApi(req.session);
-  const sonosApi = await SonosApi(req.session);
+  const sonosToken = req.session.get("sonos_token");
+
+  const sonosApi = new SonosApi();
+  const sonosConnected = await sonosApi.connect(sonosToken);
 
   const spotifyConnection = {
     connected: false,
@@ -26,16 +28,10 @@ export const getServerSideProps = withSession(async function({
   };
 
   const sonosConnection = {
-    connected: false,
-    loginUrl: "",
+    connected: sonosConnected,
+    loginUrl: sonosApi.authorizationUri,
     badgeClass: "bg-black"
   };
-
-  if (sonosApi) {
-    sonosConnection.connected = true;
-  } else {
-    sonosConnection.loginUrl = sonosAuthPage;
-  }
 
   if (spotifyApi) {
     spotifyConnection.connected = true;
@@ -44,7 +40,12 @@ export const getServerSideProps = withSession(async function({
   }
 
   return {
-    props: { spotifyConnection, hueConnection, sonosConnection, errorMessage }
+    props: {
+      spotifyConnection,
+      hueConnection,
+      sonosConnection,
+      errorMessage: ""
+    }
   };
 });
 

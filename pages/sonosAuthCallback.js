@@ -1,5 +1,5 @@
 import withSession from "../lib/session";
-import { sonosOauth, sonosAuthPage } from "../lib/sonos-connection";
+import SonosApi from "../lib/sonosApi";
 import ServiceConnect from "../components/ServiceConnect";
 
 export const getServerSideProps = withSession(async function({
@@ -7,48 +7,45 @@ export const getServerSideProps = withSession(async function({
   res,
   query
 }) {
+  const sonosApi = new SonosApi();
   const { code } = query;
-
   const sonosConnection = {
     connected: false,
-    loginUrl: sonosAuthPage,
+    loginUrl: sonosApi.authorizationUri,
     badgeClass: "bg-black"
   };
 
-  if (code) {
-    const options = {
-      code,
-      redirect_uri: `${process.env.DOMAIN}/sonosAuthCallback`,
-      grant_type: "authorization_code"
-    };
-    try {
-      const result = await sonosOauth.authorizationCode.getToken(options);
-      try {
-        const token = await sonosOauth.accessToken.create(result);
-        req.session.set("sonos_token", result);
-        await req.session.save();
-        res.writeHead(302, { Location: "/" });
-        res.end();
-      } catch (err) {
-        console.log("errCreateSonosToken", err);
-        return {
-          props: {
-            message: "Error creating Sonos Token. Try again.",
-            sonosConnection
-          }
-        };
-      }
-    } catch (err) {
-      console.log("errGetSonosToken", err);
-      return {
-        props: {
-          message: "Error getting Sonos Token. Try again.",
-          sonosConnection
-        }
-      };
-    }
-  } else {
+  if (!code) {
     return { props: { message: "No code. Try again.", sonosConnection } };
+  }
+
+  try {
+    const sonosToken = await sonosApi.setTokenOnCallback(code);
+    const connected = await sonosApi.connect(sonosToken);
+    sonosConnection.connected = connected;
+  } catch (err) {
+    console.info("errGetSonosToken", err);
+    return {
+      props: {
+        message: "Error getting Sonos Token. Try again.",
+        sonosConnection
+      }
+    };
+  }
+
+  try {
+    req.session.set("sonos_token", sonosApi.token);
+    await req.session.save();
+    res.writeHead(302, { Location: "/" });
+    res.end();
+  } catch (err) {
+    console.error("errCreateSonosToken", err);
+    return {
+      props: {
+        message: "Error creating Sonos Token. Try again.",
+        sonosConnection
+      }
+    };
   }
 });
 
