@@ -47,6 +47,8 @@ export const getServerSideProps = withSession(async function({
       }
     };
   }
+
+  return { props: {} };
 });
 
 const SonosAuthentication = ({ message, sonosConnection }) => {
