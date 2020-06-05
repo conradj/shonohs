@@ -1,8 +1,8 @@
 import Head from "next/head";
 import Link from "next/link";
 import withSession from "../lib/session";
-import { SpotifyApi, spotifyAuthPage } from "../lib/spotify-connection";
 import ServiceConnect from "../components/ServiceConnect";
+import SpotifyApi from "../lib/spotifyApi";
 import SonosApi from "../lib/sonosApi";
 
 export const getServerSideProps = withSession(async function({
@@ -10,15 +10,20 @@ export const getServerSideProps = withSession(async function({
   res,
   query
 }) {
-  const spotifyApi = await SpotifyApi(req.session);
   const sonosToken = req.session.get("sonos_token");
-
+  const spotifyAccessToken = req.session.get("spotify_access_token");
+  const spotifyRefreshToken = req.session.get("spotify_refresh_token");
+  const spotifyApi = new SpotifyApi();
+  const spotifyConnected = await spotifyApi.connect(
+    spotifyAccessToken,
+    spotifyRefreshToken
+  );
   const sonosApi = new SonosApi();
   const sonosConnected = await sonosApi.connect(sonosToken);
 
   const spotifyConnection = {
-    connected: false,
-    loginUrl: "",
+    connected: spotifyConnected,
+    loginUrl: spotifyApi.authorizationUri,
     badgeClass: "bg-green-500"
   };
   const hueConnection = {
@@ -32,13 +37,6 @@ export const getServerSideProps = withSession(async function({
     loginUrl: sonosApi.authorizationUri,
     badgeClass: "bg-black"
   };
-
-  if (spotifyApi) {
-    spotifyConnection.connected = true;
-  } else {
-    spotifyConnection.loginUrl = spotifyAuthPage();
-  }
-
   return {
     props: {
       spotifyConnection,
